@@ -93,8 +93,8 @@ namespace CurvedUI
                 BaseRaycaster[] raycasters = GetComponents<BaseRaycaster>();
                 foreach(BaseRaycaster caster in raycasters)
                 {
-                    if (!(caster is CurvedUIRaycaster))
-                        caster.enabled = false;
+                    //if (!(caster is CurvedUIRaycaster))
+                        // caster.enabled = false;
                 }
                 this.gameObject.AddComponentIfMissing<CurvedUIRaycaster>();
 
