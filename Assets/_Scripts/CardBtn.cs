@@ -36,6 +36,8 @@ public class CardBtn : MonoBehaviour
             outline.enabled = true;
             pm.MovePos();
             Debug.Log(isClick);
+
+            BattleManager.Instance.AddCard(gameObject.GetComponent<Card>());
         }
      else //취소하면
         {
@@ -47,6 +49,8 @@ public class CardBtn : MonoBehaviour
             outline.enabled = false;
             pm.MovePos();
             Debug.Log(isClick);
+
+            BattleManager.Instance.RemoveCard();
         }
     
     
