@@ -42,7 +42,6 @@ public class UiManager : MonoBehaviour
 
     public void CostDotRefresh()
     {
-        Debug.Log("코스트리프레시 작동");
         for (int i = 0; i < BattleManager.Instance.turnCost; i++)
         {
             if(i< BattleManager.Instance.CurCost)

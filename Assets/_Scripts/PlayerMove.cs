@@ -38,6 +38,7 @@ public class PlayerMove : MonoBehaviour
             transform.DOMove(monsterpos.position, 1f);
             pannel.transform.DOMove(monspannelpos.position, 1f);
             pannel.transform.DOScale(new Vector3(0.03f, 0.03f, 0.03f), 1f);
+            xrorgin.gameObject.transform.DOLocalMove(new Vector3(0.0f, 0.0f, 0.0f), 1f);
             xrorgin.gameObject.transform.DORotate(monsterpos.rotation.eulerAngles, 1f);
             print(monsterpos.rotation.eulerAngles);
             targetting = true;
@@ -47,6 +48,7 @@ public class PlayerMove : MonoBehaviour
             transform.DOMove(startpos.position, 1f);
             pannel.transform.DOMove(startpos.position + panelvec, 1f);
             pannel.transform.DOScale(new Vector3(0.1f, 0.1f, 0.1f), 1f);
+            xrorgin.gameObject.transform.DOLocalMove(new Vector3(0.0f, 0.0f, 0.0f), 1f);
             xrorgin.gameObject.transform.DORotate(startpos.rotation.eulerAngles, 1f);
 
             targetting = false;
