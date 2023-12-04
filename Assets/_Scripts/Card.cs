@@ -38,11 +38,19 @@ public class Card : MonoBehaviour
         SettingUi();
     }
 
-    void SettingUi()
+    public void SettingUi()
     {
+        if(!gameObject.activeSelf)
+        {
+            gameObject.SetActive(true);
+        }
         nametext.text = cardName;
         costtext.text = cost.ToString();
         valuetext.text = Value.ToString();
+
+        orderImage.SetActive(false);
+        SetAble(true);
+        cardbtn.SetRefresh();
 
         /*
           cardImg.sprite = illust;

@@ -10,6 +10,7 @@ public class CardBtn : MonoBehaviour
 
     public Image outline;
     public Image selectedOutline;
+    Vector2 startRect;
 
     PlayerMove pm;
     Card card;
@@ -17,18 +18,30 @@ public class CardBtn : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+    }
+    private void Awake()
+    {
         pm = FindAnyObjectByType<PlayerMove>();
+        startRect = GetComponent<RectTransform>().anchoredPosition;
         card = GetComponent<Card>();
     }
-
     // Update is called once per frame
     void Update()
     {
         
     }
+    public void SetRefresh()
+     {   
+        isClick = false;
+        isSelected = false;
+        RectTransform rectTransform = GetComponent<RectTransform>();
+        rectTransform.anchoredPosition = startRect;
+        outline.enabled = false;
+        selectedOutline.enabled = false;
+    }
 
-
-    public void OnClick() 
+        public void OnClick() 
     {
 
         if (BattleManager.Instance.SelectedCard !=null && BattleManager.Instance.SelectedCard != card)

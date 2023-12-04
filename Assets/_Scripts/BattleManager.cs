@@ -3,12 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.XR.Interaction.Toolkit.UI;
 using static BattleManager;
 
 public class BattleManager : MonoBehaviour
 {
 
-    private  BattleManager instance;
+    private BattleManager instance;
 
     public static BattleManager Instance { get; private set; }
 
@@ -17,21 +18,22 @@ public class BattleManager : MonoBehaviour
     [SerializeField]
     private int curCost = 0;
     public bool isZoom = false;
-    public GameObject monster;
+    public GameObject monsterOb;
+    public Monster monster;
 
-    public int CurCost 
-    { get { return curCost; } 
+    public int CurCost
+    { get { return curCost; }
         set
-        { 
+        {
             curCost = value;
             UiManager.Instance.CostDotRefresh();
 
-        } 
+        }
     }
 
-    public int battleTurn =0;
+    public int battleTurn = 0;
 
-   
+
     public List<CardQue> Actionlist = new List<CardQue>();
     public List<GameObject> CardList = new List<GameObject>();
 
@@ -49,39 +51,42 @@ public class BattleManager : MonoBehaviour
 
     private void Awake()
     {
-        if(instance == null)
+        if (instance == null)
         {
             Instance = this;
+            monster = monsterOb.GetComponent<Monster>();    
         }
-       
+
     }
     // Start is called before the first frame update
     void Start()
     {
         maxCost = 10;
         turnCost = 5;
-        curCost = 5;
+        CurCost = 5;
 
         TurnStart();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-
     void TurnStart()
     {
         battleTurn++;
-        turnCost++;
-        curCost = turnCost;
+        if(turnCost < maxCost)
+        {
+            turnCost++;
+        }
+        CurCost = turnCost;
+
+        foreach(GameObject card in CardList)
+        {
+            card.GetComponent<Card>().SettingUi();
+        }
     }
+
     public void AddCard(Card card)
-    { 
+    {
         SelectedCard = card;
-        CurCost -= card.cost; 
+        CurCost -= card.cost;
     }
 
     public void RemoveCard()
@@ -101,9 +106,8 @@ public class BattleManager : MonoBehaviour
         for (int i = 0; i < CardList.Count; i++)
         {
             Card card = CardList[i].GetComponent<Card>();
-            Debug.Log(!card.cardbtn.isSelected +" 이거와 이거 "+(card.cost > curCost));
 
-            if (!card.cardbtn.isSelected && card.cost>curCost)
+            if (!card.cardbtn.isSelected && card.cost > curCost)
             {
                 card.SetAble(false);
             }
@@ -112,12 +116,12 @@ public class BattleManager : MonoBehaviour
                 card.SetAble(true);
             }
         }
-     }
+    }
 
     public void RemoveTarget(Card card)
     {
-        
-        for(int i=0; i< Actionlist.Count; i++)
+
+        for (int i = 0; i < Actionlist.Count; i++)
         {
             if (Actionlist[i].card == card)
             {
@@ -150,5 +154,75 @@ public class BattleManager : MonoBehaviour
         }
 
     }
+
+    public void StartBattleTurn()
+    {
+        if(Actionlist.Count == 0)
+        {
+            return;
+        }
+
+        StartCoroutine(PlayerTurnCorutine());
+    }
+
+
+    IEnumerator PlayerTurnCorutine()
+    {
+        UiManager.Instance.MainPannel.GetComponent<TrackedDeviceGraphicRaycaster>().enabled = false;
+        PlayerManager.Instance.pm.MovePos();
+        yield return new WaitForSeconds(1f);
+
+        while (Actionlist.Count !=0) 
+        { 
+
+
+           if(monster.parts[Actionlist[0].targetnum].Active)
+            {
+                monster.Damaged(Actionlist[0].targetnum, Actionlist[0].card.Value);
+            }
+           else //만약이미 타겟이 죽은경우
+            {
+                List<int> RandTarget = new List<int>();
+
+                for (int i = 0; i < monster.parts.Count; i++)
+                {
+                    if (monster.parts[i].Active)//살아있는 파츠 색출
+                    {
+                        print(i+"번파츠 살아있음");
+                        RandTarget.Add(i); //살아있는 파츠 번호 추가
+                    }
+                }
+
+                int randomT = UnityEngine.Random.Range(0, RandTarget.Count);
+                monster.Damaged(RandTarget[randomT], Actionlist[0].card.Value);
+                print("대상이 이미 죽었으므로" + monster.parts[RandTarget[randomT]].PartName+"에게" + Actionlist[0].card.Value +"만큼 데미지");
+            }
+           
+            Actionlist[0].card.gameObject.SetActive(false);
+            Actionlist.RemoveAt(0);
+
+            yield return new WaitForSeconds(1f);
+        }
+
+        StartCoroutine(MonsterTurnCourtine());
+    }
+
+    IEnumerator MonsterTurnCourtine()
+    {
+        PlayerManager.Instance.pm.MovePos();
+        yield return new WaitForSeconds(2f);
+
+        for (int i = 0; i < monster.parts.Count; i++)
+        {
+            PlayerManager.Instance.player.Damaged(monster.parts[i].NomalAttackDamage);
+
+
+            yield return new WaitForSeconds(1f);
+        }
+        TurnStart();
+        UiManager.Instance.MainPannel.GetComponent<TrackedDeviceGraphicRaycaster>().enabled = true;
+    }
+
+
 
 }

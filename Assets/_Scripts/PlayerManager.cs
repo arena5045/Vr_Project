@@ -8,15 +8,17 @@ public class PlayerManager : MonoBehaviour
 
     public static PlayerManager Instance { get; private set; }
 
-    public GameObject player;
+    public GameObject playerOb;
     public PlayerMove pm;
+    public Player player; 
     private void Awake()
     {
         if (instance == null)
         {
             Instance = this;
 
-            pm = player.GetComponent<PlayerMove>();
+            pm = playerOb.GetComponent<PlayerMove>();
+            player = playerOb.GetComponent<Player>();
         }
 
     }
@@ -32,4 +34,7 @@ public class PlayerManager : MonoBehaviour
     {
         
     }
+
+
+
 }
