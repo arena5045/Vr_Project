@@ -75,12 +75,7 @@ public class CardBtn : MonoBehaviour
                 Debug.Log(isClick);
                 BattleManager.Instance.RemoveCard();
             }
-
-
-           
         }
-    
-    
     }
 
 
@@ -90,4 +85,6 @@ public class CardBtn : MonoBehaviour
         selectedOutline.enabled = true;
         isSelected = true;
     }
+
+
 }

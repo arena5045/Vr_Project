@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.UI;
 
 public class Monster : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class Monster : MonoBehaviour
     public struct monsterPart
     {
         public string PartName;
+        public int maxhp;
         public int hp;
 
         public GameObject targettingUi;
@@ -33,4 +35,13 @@ public class Monster : MonoBehaviour
 
     }
 
+
+    private void Update()
+    {
+        foreach (monsterPart part in parts) 
+        {
+          part.hpUi.GetComponentInChildren<Slider>().value = (float)part.hp/part.maxhp;
+        
+        }
+    }
 }

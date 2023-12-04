@@ -18,6 +18,7 @@ public class UiManager : MonoBehaviour
 
     public TMP_Text costText;
     public GameObject[] costmark;
+    public GameObject[] Hpbar;
 
 
     // Start is called before the first frame update
@@ -36,12 +37,25 @@ public class UiManager : MonoBehaviour
     public void UiRefresh()
     {
         costText.text = $"{BattleManager.Instance.CurCost}/{BattleManager.Instance.turnCost}";
+        for (int i = 0; i < Hpbar.Length; i++) 
+        {int k = BattleManager.Instance.monster.GetComponent<Monster>().parts.Count;
+            if(i<k)
+            {
+                Hpbar[i].SetActive(true);
+            }
+            else
+            { Hpbar[i].SetActive(false); }
+           
+        }
+
         CostDotRefresh();
     }
 
 
     public void CostDotRefresh()
     {
+        costText.text = $"{BattleManager.Instance.CurCost}/{BattleManager.Instance.turnCost}";
+
         for (int i = 0; i < BattleManager.Instance.turnCost; i++)
         {
             if(i< BattleManager.Instance.CurCost)

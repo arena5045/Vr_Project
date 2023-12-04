@@ -17,6 +17,7 @@ public class BattleManager : MonoBehaviour
     [SerializeField]
     private int curCost = 0;
     public bool isZoom = false;
+    public GameObject monster;
 
     public int CurCost 
     { get { return curCost; } 
@@ -24,6 +25,7 @@ public class BattleManager : MonoBehaviour
         { 
             curCost = value;
             UiManager.Instance.CostDotRefresh();
+
         } 
     }
 
@@ -31,6 +33,7 @@ public class BattleManager : MonoBehaviour
 
    
     public List<CardQue> Actionlist = new List<CardQue>();
+    public List<GameObject> CardList = new List<GameObject>();
 
     [Serializable]
     public struct CardQue
@@ -91,24 +94,61 @@ public class BattleManager : MonoBehaviour
     {
         CardQue cardque = new CardQue(SelectedCard, targetnum);
         Actionlist.Add(cardque);
+        SelectedCard.OrderSetting(true, Actionlist.Count);
         SelectedCard.GetComponent<CardBtn>().Selected();
         SelectedCard = null;
-    }
+
+        for (int i = 0; i < CardList.Count; i++)
+        {
+            Card card = CardList[i].GetComponent<Card>();
+            Debug.Log(!card.cardbtn.isSelected +" 이거와 이거 "+(card.cost > curCost));
+
+            if (!card.cardbtn.isSelected && card.cost>curCost)
+            {
+                card.SetAble(false);
+            }
+            else
+            {
+                card.SetAble(true);
+            }
+        }
+     }
 
     public void RemoveTarget(Card card)
     {
-        foreach(CardQue cardque in Actionlist )
+        
+        for(int i=0; i< Actionlist.Count; i++)
         {
-            if(cardque.card == card)
+            if (Actionlist[i].card == card)
             {
-                CurCost += cardque.card.cost;
-                Actionlist.Remove(cardque);
-                break;
+                CurCost += Actionlist[i].card.cost;
+                Actionlist[i].card.OrderSetting(false, 0);
+                Actionlist[i].card.GetComponent<CardBtn>().isSelected = false;
+                Actionlist.Remove(Actionlist[i]);
+
+                if (i == Actionlist.Count) //뺀카드가 마지막일경우 종료
+                    break;
+            }
+
+            Actionlist[i].card.OrderSetting(true, i + 1);
+        }
+
+
+        for (int i = 0; i < CardList.Count; i++)
+        {
+            Card hcard = CardList[i].GetComponent<Card>();
+            //Debug.Log(!hcard.cardbtn.isSelected + " 이거와 이거 " + (hcard.cost > curCost));
+
+            if (!hcard.cardbtn.isSelected && hcard.cost > curCost)
+            {
+                hcard.SetAble(false);
+            }
+            else
+            {
+                hcard.SetAble(true);
             }
         }
 
     }
-
-
 
 }

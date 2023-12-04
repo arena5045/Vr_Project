@@ -26,10 +26,15 @@ public class Card : MonoBehaviour
     public TMP_Text costtext;
     public TMP_Text valuetext;
 
+    public GameObject orderImage;
+    public TMP_Text orderText;
 
+    public GameObject DisalbeImage;
+    public CardBtn cardbtn;
 
     private void Start()
     {
+        cardbtn = GetComponent<CardBtn>();
         SettingUi();
     }
 
@@ -55,5 +60,21 @@ public class Card : MonoBehaviour
         */
 
     }
+
+    public void OrderSetting(bool isOn, int ordercount)
+    {
+        orderImage.SetActive(isOn);
+
+        if (isOn)
+        { orderText.text = ordercount.ToString(); }
+    }
+
+
+    public void SetAble(bool isAble)
+    {
+            gameObject.GetComponent<Button>().enabled = isAble;
+            DisalbeImage.SetActive(!isAble);
+    }
+
 
 }
