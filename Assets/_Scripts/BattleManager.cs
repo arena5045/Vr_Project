@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR.Interaction.Toolkit.UI;
@@ -192,10 +193,17 @@ public class BattleManager : MonoBehaviour
                         RandTarget.Add(i); //살아있는 파츠 번호 추가
                     }
                 }
-
-                int randomT = UnityEngine.Random.Range(0, RandTarget.Count);
-                monster.Damaged(RandTarget[randomT], Actionlist[0].card.Value);
-                print("대상이 이미 죽었으므로" + monster.parts[RandTarget[randomT]].PartName+"에게" + Actionlist[0].card.Value +"만큼 데미지");
+                if (RandTarget.Count>0)
+                {
+                    int randomT = UnityEngine.Random.Range(0, RandTarget.Count);
+                    monster.Damaged(RandTarget[randomT], Actionlist[0].card.Value);
+                    print("대상이 이미 죽었으므로" + monster.parts[RandTarget[randomT]].PartName + "에게" + Actionlist[0].card.Value + "만큼 데미지");
+                }
+                else //다죽었다는 소리
+                {
+                    print("여기에 게임클리어 내용");
+                    
+                }
             }
            
             Actionlist[0].card.gameObject.SetActive(false);

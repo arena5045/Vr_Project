@@ -22,6 +22,8 @@ public class UiManager : MonoBehaviour
     public GameObject[] Hpbar;
     public GameObject MainPannel;
 
+    public GameObject monsNamapannel;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -77,5 +79,22 @@ public class UiManager : MonoBehaviour
                 costmark[i].GetComponent<Costmark>().DeactiveCost();
             }
         }
+    }
+
+
+    public void MonsNamePannelSet(bool set, string name)
+    {
+        if (set)
+        {
+            monsNamapannel.SetActive(true);
+            monsNamapannel.GetComponentInChildren<TMP_Text>().text = name;
+        }
+        else
+        {
+            monsNamapannel.SetActive(false);
+            monsNamapannel.GetComponentInChildren<TMP_Text>().text = "";
+
+        }
+
     }
 }

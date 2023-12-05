@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class TargettingCanvas : MonoBehaviour, IPointerClickHandler
+public class TargettingCanvas : MonoBehaviour, IPointerClickHandler,IPointerEnterHandler,IPointerExitHandler
 {
     public string partname;
     public int partnum;
@@ -38,4 +38,15 @@ public class TargettingCanvas : MonoBehaviour, IPointerClickHandler
             PlayerManager.Instance.pm.MovePos();
         }
     }
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        UiManager.Instance.MonsNamePannelSet(true, partname);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        UiManager.Instance.MonsNamePannelSet(false, partname);
+    }
+
+
 }
