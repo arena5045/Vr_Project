@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -36,6 +34,7 @@ public class Player : MonoBehaviour
         {
             curHp = 0;
             print("惟績神獄っっっっっっっっっっっ");
+            PlayerManager.Instance.Gameover();
         }
     }
 

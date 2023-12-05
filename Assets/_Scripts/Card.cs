@@ -32,9 +32,13 @@ public class Card : MonoBehaviour
     public GameObject DisalbeImage;
     public CardBtn cardbtn;
 
-    private void Start()
+
+    private void Awake()
     {
         cardbtn = GetComponent<CardBtn>();
+    }
+    private void Start()
+    {
         SettingUi();
     }
 

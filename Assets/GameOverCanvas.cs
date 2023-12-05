@@ -2,20 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class GameOverCanvas : MonoBehaviour
 {
 
-    [SerializeField] private InputActionAsset ActionAsset;
+    //[SerializeField] private InputActionAsset ActionAsset;
     [SerializeField] private InputActionReference JoyStitckR;
 
     // Start is called before the first frame update
     void Start()
     {
-        if (ActionAsset != null)
+        //if (ActionAsset != null)
         {
-            print("작동");
-            ActionAsset.Enable();
+  
+           // ActionAsset.Enable();
+           // print(ActionAsset.enabled);
         }
     }
 
@@ -25,9 +27,12 @@ public class GameOverCanvas : MonoBehaviour
         bool boolValue = (JoyStitckR.action.ReadValue<float>() !=0 );
         //bool a = JoyStitckR.action.ReadValue<float>();
         print(boolValue);
-        //if(JoyStitckR.action.ReadValue<float>())
+       if(boolValue)
         {
-            //print("눌렀다고");
+            string currentSceneName = SceneManager.GetActiveScene().name;
+
+            // 현재 씬을 다시 로드합니다.
+            SceneManager.LoadScene(currentSceneName);
         }
     }
 }

@@ -23,6 +23,8 @@ public class UiManager : MonoBehaviour
     public GameObject MainPannel;
 
     public GameObject monsNamapannel;
+    public GameObject gameoverPannel;
+
 
     // Start is called before the first frame update
     void Start()
@@ -40,6 +42,7 @@ public class UiManager : MonoBehaviour
     public void UiRefresh()
     {
         costText.text = $"{BattleManager.Instance.CurCost}/{BattleManager.Instance.turnCost}";
+
         for (int i = 0; i < Hpbar.Length; i++)
         { int k = BattleManager.Instance.monster.GetComponent<Monster>().parts.Count;
             if (i < k)
@@ -57,7 +60,7 @@ public class UiManager : MonoBehaviour
 
     public void HpbarRefressh()
     {
-        for(int i =0; i < BattleManager.Instance.monster.GetComponent<Monster>().parts.Count; i++) 
+        for (int i = 0; i < BattleManager.Instance.monster.GetComponent<Monster>().parts.Count; i++)
         {
             Hpbar[i].GetComponentInChildren<Slider>().value = BattleManager.Instance.monster.GetComponent<Monster>().parts[i].hpUi.GetComponentInChildren<Slider>().value;
         }
@@ -67,15 +70,18 @@ public class UiManager : MonoBehaviour
     public void CostDotRefresh()
     {
         costText.text = $"{BattleManager.Instance.CurCost}/{BattleManager.Instance.turnCost}";
+        print(BattleManager.Instance.CurCost +  ": 현재코스트");
 
         for (int i = 0; i < BattleManager.Instance.turnCost; i++)
         {
-            if(i< BattleManager.Instance.CurCost)
+            if (i < BattleManager.Instance.CurCost)
             {
+                print(i + "번 액티브");
                 costmark[i].GetComponent<Costmark>().AtciveCost();
             }
             else
             {
+                print(i + "번 디액티브");
                 costmark[i].GetComponent<Costmark>().DeactiveCost();
             }
         }
@@ -95,6 +101,13 @@ public class UiManager : MonoBehaviour
             monsNamapannel.GetComponentInChildren<TMP_Text>().text = "";
 
         }
+
+    }
+
+
+    public void SetGameover()
+    {
+        gameoverPannel.SetActive(true);
 
     }
 }

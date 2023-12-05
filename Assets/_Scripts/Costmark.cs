@@ -7,7 +7,7 @@ public class Costmark : MonoBehaviour
     public GameObject activedot;
     public GameObject deactivedot;
 
-    private void Start()
+    private void Awake()
     {
         activedot.SetActive(false);
         deactivedot.SetActive(false);

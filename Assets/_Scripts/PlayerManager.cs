@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -10,7 +12,9 @@ public class PlayerManager : MonoBehaviour
 
     public GameObject playerOb;
     public PlayerMove pm;
-    public Player player; 
+    public Player player;
+
+    public bool gameover=false;
     private void Awake()
     {
         if (instance == null)
@@ -21,6 +25,17 @@ public class PlayerManager : MonoBehaviour
             player = playerOb.GetComponent<Player>();
         }
 
+    }
+
+    public void Gameover()
+    {
+        gameover = true;
+        UiManager.Instance.SetGameover();
+        ActionBasedController[] cont = playerOb.GetComponentsInChildren<ActionBasedController>();
+        foreach (ActionBasedController controller in cont) 
+        {
+          controller.enabled = false;
+        }
     }
 
     // Start is called before the first frame update

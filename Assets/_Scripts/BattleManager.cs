@@ -64,7 +64,7 @@ public class BattleManager : MonoBehaviour
     {
         maxCost = 10;
         turnCost = 5;
-        CurCost = 5;
+        curCost = 5;
 
         TurnStart();
     }
