@@ -204,6 +204,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 816d8cf54c9cf9643b75bfe5aef1a08b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  data: {fileID: 0}
   cardName: "\uBE14\uB808\uC774\uB4DC\uC2AC\uB798\uC2DC"
   type: 0
   cost: 2
@@ -211,12 +212,13 @@ MonoBehaviour:
   illust: {fileID: 0}
   nametext: {fileID: 2289012660111177207}
   typeimg: []
-  cardImg: {fileID: 0}
+  cardImg: {fileID: 2386829767656757815}
   costtext: {fileID: 7069764914382481329}
   valuetext: {fileID: 2529273837744322837}
   orderImage: {fileID: 323446802482225576}
   orderText: {fileID: 2616484376052563406}
   DisalbeImage: {fileID: 1432868332527770452}
+  cardbtn: {fileID: 2245706417169078375}
 --- !u!1 &1432868332527770452
 GameObject:
   m_ObjectHideFlags: 0

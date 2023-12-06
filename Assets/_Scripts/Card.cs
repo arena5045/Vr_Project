@@ -1,3 +1,4 @@
+using Palmmedia.ReportGenerator.Core.Reporting.Builders;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -13,6 +14,8 @@ public class Card : MonoBehaviour
         DeBuff,
         Heal
     }
+
+    public CardData data;
 
     public string cardName;
     public CardTyep type;
@@ -44,13 +47,27 @@ public class Card : MonoBehaviour
 
     public void SettingUi()
     {
-        if(!gameObject.activeSelf)
+        if (!gameObject.activeSelf)
         {
             gameObject.SetActive(true);
         }
-        nametext.text = cardName;
-        costtext.text = cost.ToString();
-        valuetext.text = Value.ToString();
+
+        if (data != null)
+        {
+            cardName = data.cardName;
+            nametext.text = cardName;
+            cost = data.cost;
+            costtext.text = cost.ToString();
+            ValueSetting();
+
+            cardImg.sprite = data.cardImg;
+        }
+        else
+        {
+            nametext.text = cardName;
+            costtext.text = cost.ToString();
+            valuetext.text = Value.ToString();
+        }
 
         orderImage.SetActive(false);
         SetAble(true);
@@ -73,6 +90,24 @@ public class Card : MonoBehaviour
 
     }
 
+    public void ValueSetting()
+    {
+        Value = data.value;
+
+        if (BattleManager.Instance.BuffList.Count >= 0)
+        {
+            foreach (int[] value in BattleManager.Instance.BuffList)
+            {
+                if (data.type == CardData.Type.Active)
+                {
+                    Value += (value[1] * cost);
+                }
+            }
+        }
+
+        valuetext.text = Value.ToString();
+
+    }
     public void OrderSetting(bool isOn, int ordercount)
     {
         orderImage.SetActive(isOn);

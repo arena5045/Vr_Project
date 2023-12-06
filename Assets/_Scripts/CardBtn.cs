@@ -49,17 +49,35 @@ public class CardBtn : MonoBehaviour
 
        if(!isClick) //클릭하면
         {
-            Vector3 cp = gameObject.GetComponent<RectTransform>().anchoredPosition;
-            cp.y += 20;
-            gameObject.GetComponent<RectTransform>().anchoredPosition = cp;
-            isClick = true;
+            if (card.data.isAll) //전체공격 또는 대상지정 하지않는 카드
+            {
+                print("전체공격");
+                Vector3 cp = gameObject.GetComponent<RectTransform>().anchoredPosition;
+                cp.y += 20;
+                gameObject.GetComponent<RectTransform>().anchoredPosition = cp;
+                isClick = true;
 
-            outline.enabled = true;
-            selectedOutline.enabled = false;
-            pm.MovePos();
-            Debug.Log(isClick);
+                outline.enabled = false;
+                selectedOutline.enabled = true;
 
-            BattleManager.Instance.AddCard(gameObject.GetComponent<Card>());
+                BattleManager.Instance.AddCard(gameObject.GetComponent<Card>());
+                BattleManager.Instance.AddTarget(-1);
+            }
+            else//대상지정카드
+            {
+                Vector3 cp = gameObject.GetComponent<RectTransform>().anchoredPosition;
+                cp.y += 20;
+                gameObject.GetComponent<RectTransform>().anchoredPosition = cp;
+                isClick = true;
+
+                outline.enabled = true;
+                selectedOutline.enabled = false;
+                pm.MovePos();
+                Debug.Log(isClick);
+
+                BattleManager.Instance.AddCard(gameObject.GetComponent<Card>());
+            }
+
         }
        else //취소하면
         {

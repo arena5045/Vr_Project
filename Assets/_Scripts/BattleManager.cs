@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR.Interaction.Toolkit.UI;
 using static BattleManager;
+using static UnityEngine.Rendering.DebugUI;
 
 public class BattleManager : MonoBehaviour
 {
@@ -22,6 +23,8 @@ public class BattleManager : MonoBehaviour
     public GameObject monsterOb;
     public Monster monster;
 
+    public List<int[]> BuffList = new List<int[]>();
+    public int[] buff = new int[2];
     public int CurCost
     { get { return curCost; }
         set
@@ -63,8 +66,8 @@ public class BattleManager : MonoBehaviour
     void Start()
     {
         maxCost = 10;
-        turnCost = 5;
-        curCost = 5;
+        turnCost = 3;
+        curCost = 3;
 
         TurnStart();
     }
@@ -78,7 +81,26 @@ public class BattleManager : MonoBehaviour
         }
         CurCost = turnCost;
 
-        foreach(GameObject card in CardList)
+        if (BuffList.Count >= 0)
+        {
+            List<int> deadbuff = new List<int>();
+            for(int i =0; i< BuffList.Count; i++)
+            {
+                BuffList[i][0]--;
+
+                if (BuffList[i][0] <= 0)
+                {
+                    deadbuff.Add(i);
+                }
+            }
+
+            foreach(int i in deadbuff)
+                {
+                  BuffList.RemoveAt(i);
+                }
+        }
+
+        foreach (GameObject card in CardList)
         {
             card.GetComponent<Card>().SettingUi();
         }
@@ -175,41 +197,76 @@ public class BattleManager : MonoBehaviour
 
         while (Actionlist.Count !=0) 
         { 
-
-
-           if(monster.parts[Actionlist[0].targetnum].Active)
+            switch(Actionlist[0].card.data.type)
             {
-                monster.Damaged(Actionlist[0].targetnum, Actionlist[0].card.Value);
-            }
-           else //만약이미 타겟이 죽은경우
-            {
-                List<int> RandTarget = new List<int>();
-
-                for (int i = 0; i < monster.parts.Count; i++)
-                {
-                    if (monster.parts[i].Active)//살아있는 파츠 색출
+                case CardData.Type.Active:
+                    if (Actionlist[0].targetnum == -1)//전체공격이면
                     {
-                        print(i+"번파츠 살아있음");
-                        RandTarget.Add(i); //살아있는 파츠 번호 추가
+                        monster.DamagedAll(Actionlist[0].card, true);
                     }
-                }
-                if (RandTarget.Count>0)
-                {
-                    int randomT = UnityEngine.Random.Range(0, RandTarget.Count);
-                    monster.Damaged(RandTarget[randomT], Actionlist[0].card.Value);
-                    print("대상이 이미 죽었으므로" + monster.parts[RandTarget[randomT]].PartName + "에게" + Actionlist[0].card.Value + "만큼 데미지");
-                }
-                else //다죽었다는 소리
-                {
-                    print("여기에 게임클리어 내용");
-                    
-                }
+
+                    else if (monster.parts[Actionlist[0].targetnum].Active)
+                    {
+                        monster.Damaged(Actionlist[0].targetnum, Actionlist[0].card, true);
+                    }
+                    else //만약이미 타겟이 죽은경우
+                    {
+                        List<int> RandTarget = new List<int>();
+
+                        for (int i = 0; i < monster.parts.Count; i++)
+                        {
+                            if (monster.parts[i].Active)//살아있는 파츠 색출
+                            {
+                                print(i + "번파츠 살아있음");
+                                RandTarget.Add(i); //살아있는 파츠 번호 추가
+                            }
+                        }
+                        if (RandTarget.Count > 0)
+                        {
+                            int randomT = UnityEngine.Random.Range(0, RandTarget.Count);
+                            monster.Damaged(RandTarget[randomT], Actionlist[0].card, true);
+                            print("대상이 이미 죽었으므로" + monster.parts[RandTarget[randomT]].PartName + "에게" + Actionlist[0].card.Value + "만큼 데미지");
+                        }
+                        else //다죽었다는 소리
+                        {
+                            print("여기에 게임클리어 내용");
+
+                        }
+                    }
+
+                    break;
+                case CardData.Type.Buff:
+                    buff[0] = Actionlist[0].card.data.duration_turn;
+                    buff[1] = Actionlist[0].card.Value;
+
+                    BuffList.Add(buff);
+                    buff = new int[2];
+
+                    //이펙트 생성
+                    GameObject buffeffect = Instantiate(Actionlist[0].card.data.effect,PlayerManager.Instance.playerOb.transform);
+                    Destroy(buffeffect, Actionlist[0].card.data.casttime);
+
+                    //데미지 재계산
+                    foreach (GameObject card in CardList)
+                    {
+                        card.GetComponent<Card>().ValueSetting();
+                    }
+
+                    break;
+                case CardData.Type.Debuff:
+                    break;
+                case CardData.Type.heal:
+                    PlayerManager.Instance.player.Heal(Actionlist[0].card.Value);
+                    GameObject healffect = Instantiate(Actionlist[0].card.data.effect, PlayerManager.Instance.playerOb.transform);
+                    Destroy(healffect, Actionlist[0].card.data.casttime);
+                    break;
+
             }
-           
+            float casttime = Actionlist[0].card.data.casttime;
             Actionlist[0].card.gameObject.SetActive(false);
             Actionlist.RemoveAt(0);
 
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(casttime);
         }
 
         StartCoroutine(MonsterTurnCourtine());
@@ -222,7 +279,10 @@ public class BattleManager : MonoBehaviour
 
         for (int i = 0; i < monster.parts.Count; i++)
         {
-            PlayerManager.Instance.player.Damaged(monster.parts[i].NomalAttackDamage);
+            if (monster.parts[i].Active)
+            {
+                PlayerManager.Instance.player.Damaged(monster.parts[i].NomalAttackDamage);
+            }
 
 
             yield return new WaitForSeconds(1f);

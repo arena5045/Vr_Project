@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 899b89a5dc37de249a50c1167f11399a, type: 3}
+  m_Name: "_3_(2)\uC6A9\uAE30\uBC31\uBC30"
+  m_EditorClassIdentifier: 
+  cardName: "\uC6A9\uAE30\uBC31\uBC30!"
+  cardCode: 3
+  isAll: 1
+  cardImg: {fileID: 21300000, guid: a2aeaf31044b64340874ed25b7726600, type: 3}
+  effect: {fileID: 6496861590636858637, guid: c355a0f1d5e00a0468cb5cbbc577fbfa, type: 3}
+  sound: {fileID: 0}
+  casttime: 2
+  type: 2
+  element: 1
+  cost: 2
+  value: 2000
+  duration_turn: 2
+  duration_value: 0
+  explanation: "\uC6A9\uAE30\uC758 \uD798\uC744 \uD65C\uC131\uD654 \uD558\uC5EC \uB450
+    \uD134\uAC04 \uACF5\uACA9 \uC2A4\uD0AC\uC758 \uB370\uBBF8\uC9C0\uB97C \uD06C\uAC8C
+    \uB192\uD78C\uB2E4"

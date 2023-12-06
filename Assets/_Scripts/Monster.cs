@@ -20,7 +20,7 @@ public class Monster : MonoBehaviour
 
         public GameObject targettingUi;
         public GameObject hpUi;
-
+        public GameObject transRoot;
 
         public void Dead()
         {
@@ -60,28 +60,64 @@ public class Monster : MonoBehaviour
 
 
 
-    public void Damaged(int partsnum, int value)
+    public void Damaged(int partsnum, Card card, bool effective)
     {
-        monsterPart part = parts[partsnum];
-        if (part.hp <= value)//죽는 피면
-        {
-            value = part.hp;
-            part.hp -= value;
-            part.Dead();
-        }
-         else
-        {
-            part.hp -= value;
-        }
+            monsterPart part = parts[partsnum];
+            if (part.hp <= card.Value)//죽는 피면
+            {
+                card.Value = part.hp;
+                part.hp -= card.Value;
+                part.Dead();
+            }
+            else
+            {
+                part.hp -= card.Value;
+            }
+            parts[partsnum] = part;
+            print(part.PartName + "에 " + card.Value + "만큼의 데미지!");
 
-       
-        parts[partsnum] = part;
-        print(part.PartName + "에 " + value + "만큼의 데미지!");
+
+        if(card.data != null && effective)
+        { 
+                GameObject hiteffect = Instantiate(card.data.effect, parts[partsnum].transRoot.transform);
+                Destroy(hiteffect, card.data.casttime);
+        }
 
         if(partsnum != 0) //본체친게아니면 본체도 데미지
         {
-            Damaged(0, value);
+            Damaged(0, card, false);
         }
+    }
+
+    public void DamagedAll(Card card, bool effective)
+    {
+
+            for(int i =0; i< parts.Count; i++)
+            {
+                monsterPart part = parts[i];
+                if (part.hp <= card.Value)//죽는 피면
+                {
+                    card.Value = part.hp;
+                    part.hp -= card.Value;
+                    part.Dead();
+                }
+                else
+                {
+                    part.hp -= card.Value;
+                }
+                parts[i] = part;
+                print(part.PartName + "에 " + card.Value + "만큼의 데미지!");
+
+            if (i != 0) //본체친게아니면 본체도 데미지
+            {
+                Damaged(0, card, false);
+            }
+        }
+
+        GameObject hiteffect = Instantiate(card.data.effect, gameObject.transform);
+        hiteffect.transform.localPosition = new Vector3(0, 3, 0);
+        Destroy(hiteffect, card.data.casttime);
+
     }
 
 }
