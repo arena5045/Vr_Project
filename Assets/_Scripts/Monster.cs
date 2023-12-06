@@ -4,22 +4,30 @@ using UnityEngine;
 using System;
 using UnityEngine.UI;
 using Unity.VisualScripting;
+using TMPro;
 
 public class Monster : MonoBehaviour
 {
     [Serializable]
     public struct monsterPart
     {
+        public bool isMain;
         public string PartName;
         public int maxhp;
         public int hp;
         public bool Active;
 
+
+        public string NomalAttackName;
         public int NomalAttackDamage;
+
+
+        public string SupperAttackName;
         public int SuperAttackDamage;
 
         public GameObject targettingUi;
         public GameObject hpUi;
+        public TMP_Text Hptxt;
         public GameObject transRoot;
 
         public void Dead()
@@ -31,9 +39,15 @@ public class Monster : MonoBehaviour
         }
     }
 
-    
+    public Animator animator;
+    public bool isDead;
     public List<monsterPart> parts;
 
+
+    private void Awake()
+    {
+        animator = GetComponentInChildren<Animator>();
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -47,6 +61,8 @@ public class Monster : MonoBehaviour
             }
         }
 
+
+
     }
 
 
@@ -55,10 +71,32 @@ public class Monster : MonoBehaviour
         foreach (monsterPart part in parts) 
         {
           part.hpUi.GetComponentInChildren<Slider>().value = (float)part.hp/part.maxhp;
+            part.Hptxt.text = part.hp + " / " + part.maxhp;
         }
     }
 
+    public void Die()
+    {
+        animator.SetTrigger("Die");
+        foreach(monsterPart part in parts)
+        {
+            part.Dead();
+        }
+        isDead = true;
+        PlayerManager.Instance.GameClear();
+    }
 
+    public void AttackAnim(int code)
+    {
+        string trigger = "Attack" + code.ToString();
+        animator.SetTrigger(trigger);
+    }
+
+    public void DamagedAnim(int code)
+    {
+        string trigger = "Damage" + code.ToString();
+        animator.SetTrigger(trigger);
+    }
 
     public void Damaged(int partsnum, Card card, bool effective)
     {
@@ -68,12 +106,22 @@ public class Monster : MonoBehaviour
                 card.Value = part.hp;
                 part.hp -= card.Value;
                 part.Dead();
+                if(part.isMain)
+               {
+                Die();
+               }
             }
             else
             {
                 part.hp -= card.Value;
             }
             parts[partsnum] = part;
+
+            if(!isDead && effective)
+        {
+            DamagedAnim(UnityEngine.Random.Range(1, 3));
+            }
+          
             print(part.PartName + "에 " + card.Value + "만큼의 데미지!");
 
 
@@ -100,7 +148,11 @@ public class Monster : MonoBehaviour
                     card.Value = part.hp;
                     part.hp -= card.Value;
                     part.Dead();
+                if (part.isMain)
+                {
+                    Die();
                 }
+            }
                 else
                 {
                     part.hp -= card.Value;
@@ -113,7 +165,10 @@ public class Monster : MonoBehaviour
                 Damaged(0, card, false);
             }
         }
-
+        if (!isDead)
+        {
+            DamagedAnim(UnityEngine.Random.Range(1, 3));
+        }
         GameObject hiteffect = Instantiate(card.data.effect, gameObject.transform);
         hiteffect.transform.localPosition = new Vector3(0, 3, 0);
         Destroy(hiteffect, card.data.casttime);

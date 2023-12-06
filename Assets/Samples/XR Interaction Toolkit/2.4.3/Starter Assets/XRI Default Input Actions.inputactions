@@ -1128,6 +1128,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "SecondanryClick",
+                    "type": "Button",
+                    "id": "7aa62ab9-d55a-4876-b736-f8844d99ccb1",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -1359,6 +1368,28 @@
                     "processors": "",
                     "groups": "Generic XR Controller",
                     "action": "Pribtnclick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "aa84a4c0-d681-411f-b9bd-a36bb729f4e3",
+                    "path": "<XRController>{RightHand}/secondaryButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Generic XR Controller",
+                    "action": "SecondanryClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f8a58113-1d7e-42d3-ab95-624980713012",
+                    "path": "<Keyboard>/n",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Generic XR Controller",
+                    "action": "SecondanryClick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

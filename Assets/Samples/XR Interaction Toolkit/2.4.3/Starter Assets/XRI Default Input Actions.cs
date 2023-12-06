@@ -1150,6 +1150,15 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SecondanryClick"",
+                    ""type"": ""Button"",
+                    ""id"": ""7aa62ab9-d55a-4876-b736-f8844d99ccb1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -1381,6 +1390,28 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
                     ""processors"": """",
                     ""groups"": ""Generic XR Controller"",
                     ""action"": ""Pribtnclick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""aa84a4c0-d681-411f-b9bd-a36bb729f4e3"",
+                    ""path"": ""<XRController>{RightHand}/secondaryButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Generic XR Controller"",
+                    ""action"": ""SecondanryClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f8a58113-1d7e-42d3-ab95-624980713012"",
+                    ""path"": ""<Keyboard>/n"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Generic XR Controller"",
+                    ""action"": ""SecondanryClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -2371,6 +2402,7 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
         m_XRIRightHand_PokePosition = m_XRIRightHand.FindAction("Poke Position", throwIfNotFound: true);
         m_XRIRightHand_PokeRotation = m_XRIRightHand.FindAction("Poke Rotation", throwIfNotFound: true);
         m_XRIRightHand_Pribtnclick = m_XRIRightHand.FindAction("Pribtnclick", throwIfNotFound: true);
+        m_XRIRightHand_SecondanryClick = m_XRIRightHand.FindAction("SecondanryClick", throwIfNotFound: true);
         // XRI RightHand Interaction
         m_XRIRightHandInteraction = asset.FindActionMap("XRI RightHand Interaction", throwIfNotFound: true);
         m_XRIRightHandInteraction_Select = m_XRIRightHandInteraction.FindAction("Select", throwIfNotFound: true);
@@ -2915,6 +2947,7 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
     private readonly InputAction m_XRIRightHand_PokePosition;
     private readonly InputAction m_XRIRightHand_PokeRotation;
     private readonly InputAction m_XRIRightHand_Pribtnclick;
+    private readonly InputAction m_XRIRightHand_SecondanryClick;
     public struct XRIRightHandActions
     {
         private @XRIDefaultInputActions m_Wrapper;
@@ -2931,6 +2964,7 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
         public InputAction @PokePosition => m_Wrapper.m_XRIRightHand_PokePosition;
         public InputAction @PokeRotation => m_Wrapper.m_XRIRightHand_PokeRotation;
         public InputAction @Pribtnclick => m_Wrapper.m_XRIRightHand_Pribtnclick;
+        public InputAction @SecondanryClick => m_Wrapper.m_XRIRightHand_SecondanryClick;
         public InputActionMap Get() { return m_Wrapper.m_XRIRightHand; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -2976,6 +3010,9 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
             @Pribtnclick.started += instance.OnPribtnclick;
             @Pribtnclick.performed += instance.OnPribtnclick;
             @Pribtnclick.canceled += instance.OnPribtnclick;
+            @SecondanryClick.started += instance.OnSecondanryClick;
+            @SecondanryClick.performed += instance.OnSecondanryClick;
+            @SecondanryClick.canceled += instance.OnSecondanryClick;
         }
 
         private void UnregisterCallbacks(IXRIRightHandActions instance)
@@ -3016,6 +3053,9 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
             @Pribtnclick.started -= instance.OnPribtnclick;
             @Pribtnclick.performed -= instance.OnPribtnclick;
             @Pribtnclick.canceled -= instance.OnPribtnclick;
+            @SecondanryClick.started -= instance.OnSecondanryClick;
+            @SecondanryClick.performed -= instance.OnSecondanryClick;
+            @SecondanryClick.canceled -= instance.OnSecondanryClick;
         }
 
         public void RemoveCallbacks(IXRIRightHandActions instance)
@@ -3436,6 +3476,7 @@ public partial class @XRIDefaultInputActions: IInputActionCollection2, IDisposab
         void OnPokePosition(InputAction.CallbackContext context);
         void OnPokeRotation(InputAction.CallbackContext context);
         void OnPribtnclick(InputAction.CallbackContext context);
+        void OnSecondanryClick(InputAction.CallbackContext context);
     }
     public interface IXRIRightHandInteractionActions
     {

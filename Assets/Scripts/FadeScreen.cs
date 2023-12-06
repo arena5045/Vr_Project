@@ -24,11 +24,14 @@ public class FadeScreen : MonoBehaviour
     public void FadeIn()
     {
         Fade(1, 0);
+        print("페이드 인 시작");
     }
     
     public void FadeOut()
     {
+        print("페이드 아웃 시작");
         Fade(0, 1);
+      
     }
 
     public void Fade(float alphaIn, float alphaOut)

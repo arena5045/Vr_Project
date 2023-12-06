@@ -1,4 +1,4 @@
-using Palmmedia.ReportGenerator.Core.Reporting.Builders;
+
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class Card : MonoBehaviour
 {
-    public enum CardTyep
+    public enum CardType
     {
         Active,
         Buff,
@@ -18,16 +18,17 @@ public class Card : MonoBehaviour
     public CardData data;
 
     public string cardName;
-    public CardTyep type;
+    public CardType type;
     public int cost;
     public int Value;
-    public Sprite illust;
+    public Sprite[] typeillust;
 
     public TMP_Text nametext;
-    public Image[] typeimg;
+    public Image typeimg;
     public Image cardImg;
     public TMP_Text costtext;
     public TMP_Text valuetext;
+    public bool val_up;
 
     public GameObject orderImage;
     public TMP_Text orderText;
@@ -39,6 +40,7 @@ public class Card : MonoBehaviour
     private void Awake()
     {
         cardbtn = GetComponent<CardBtn>();
+       
     }
     private void Start()
     {
@@ -51,6 +53,11 @@ public class Card : MonoBehaviour
         {
             gameObject.SetActive(true);
         }
+        if (data == null)
+        {
+            data = BattleManager.Instance.Deck[Random.Range(0, BattleManager.Instance.Deck.Count)];
+        }
+
 
         if (data != null)
         {
@@ -58,9 +65,38 @@ public class Card : MonoBehaviour
             nametext.text = cardName;
             cost = data.cost;
             costtext.text = cost.ToString();
+            switch(data.type)
+            {
+                case CardData.Type.Active: type = CardType.Active; break;
+                case CardData.Type.Buff: type = CardType.Buff; break;
+                case CardData.Type.heal: type = CardType.Heal; break;
+                case CardData.Type.Debuff: type = CardType.DeBuff; break;
+
+            }
+            
+       switch(type)
+      {
+          case CardType.Active:
+                    typeimg.sprite = typeillust[0];
+              break;
+          case CardType.Buff:
+                    typeimg.sprite = typeillust[1];
+                    break;
+
+          case CardType.Heal:
+                    typeimg.sprite = typeillust[2];
+                    break;
+                case CardType.DeBuff:
+
+                    typeimg.sprite = typeillust[3];
+                    break;
+            }
+     
+
             ValueSetting();
 
             cardImg.sprite = data.cardImg;
+
         }
         else
         {
@@ -73,28 +109,27 @@ public class Card : MonoBehaviour
         SetAble(true);
         cardbtn.SetRefresh();
 
-        /*
-          cardImg.sprite = illust;
-          switch(type)
-         {
-             case CardTyep.Active:
-                 break;
-             case CardTyep.Buff:
-                 break;
-             case CardTyep.DeBuff:
-                 break;
-             case CardTyep.Heal:
-                 break;
-         }
-        */
+        if (!cardbtn.isSelected && cost >BattleManager.Instance.CurCost)
+        {
+            SetAble(false);
+        }
+        else
+        {
+            SetAble(true);
+        }
+
 
     }
 
     public void ValueSetting()
     {
+        if (data == null)
+            return;
+
+
         Value = data.value;
 
-        if (BattleManager.Instance.BuffList.Count >= 0)
+        if (BattleManager.Instance.BuffList.Count > 0)
         {
             foreach (int[] value in BattleManager.Instance.BuffList)
             {
@@ -104,7 +139,14 @@ public class Card : MonoBehaviour
                 }
             }
         }
-
+        if(Value != data.value)
+        {
+            valuetext.color = Color.green;
+        }
+        else
+        {
+            valuetext.color = Color.white;
+        }
         valuetext.text = Value.ToString();
 
     }

@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System.Collections;
 using System.Drawing;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +12,7 @@ public class Player : MonoBehaviour
     public int curHp=1000;
 
     public Slider Hpbar;
+    public TMP_Text hptext;
     // Start is called before the first frame update
     void Start()
     {
@@ -23,6 +25,7 @@ public class Player : MonoBehaviour
     {
         //print(curHp);
        Hpbar.value = (float)curHp / MaxHp;
+        hptext.text = "플레이어 체력         " + curHp + " / " + MaxHp;
         //Damaged(1); 
     }
 

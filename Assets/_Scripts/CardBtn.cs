@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class CardBtn : MonoBehaviour
+public class CardBtn : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
+
     public bool isClick = false;
     public bool isSelected = false;
 
@@ -115,6 +117,16 @@ public class CardBtn : MonoBehaviour
         outline.enabled = false;
         selectedOutline.enabled = true;
         isSelected = true;
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        UiManager.Instance.skill_desc.text= card.data.explanation;
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        UiManager.Instance.skill_desc.text = "";
     }
 
 

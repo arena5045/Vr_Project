@@ -7,9 +7,9 @@ using UnityEngine.SceneManagement;
 public class GameOverCanvas : MonoBehaviour
 {
 
-    //[SerializeField] private InputActionAsset ActionAsset;
+    [SerializeField] private InputActionAsset ActionAsset;
     [SerializeField] private InputActionReference JoyStitckR;
-
+    [SerializeField] private InputActionReference JoyStitckSecondary;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,15 +24,19 @@ public class GameOverCanvas : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        bool boolValue = (JoyStitckR.action.ReadValue<float>() !=0 );
+        bool privalue = (JoyStitckR.action.ReadValue<float>() !=0 );
+        bool secondaryvalue = (JoyStitckSecondary.action.ReadValue<float>() != 0);
         //bool a = JoyStitckR.action.ReadValue<float>();
-        print(boolValue);
-       if(boolValue)
+        print(privalue);
+       if(privalue)
         {
-            string currentSceneName = SceneManager.GetActiveScene().name;
-
-            // 현재 씬을 다시 로드합니다.
-            SceneManager.LoadScene(currentSceneName);
+            SceneTransitionManager.singleton.GoToSceneAsync(1);
+            enabled = false;
+        }
+       else if(secondaryvalue)
+        {
+            SceneTransitionManager.singleton.GoToSceneAsync(0);
+            enabled = false;
         }
     }
 }

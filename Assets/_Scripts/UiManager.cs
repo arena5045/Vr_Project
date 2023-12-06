@@ -21,9 +21,13 @@ public class UiManager : MonoBehaviour
     public GameObject[] costmark;
     public GameObject[] Hpbar;
     public GameObject MainPannel;
+    public TMP_Text skill_desc;
 
     public GameObject monsNamapannel;
+    public GameObject monsattackpannel;
+
     public GameObject gameoverPannel;
+    public GameObject gameclearPannel;
 
 
     // Start is called before the first frame update
@@ -76,12 +80,11 @@ public class UiManager : MonoBehaviour
         {
             if (i < BattleManager.Instance.CurCost)
             {
-                print(i + "번 액티브");
+  
                 costmark[i].GetComponent<Costmark>().AtciveCost();
             }
             else
             {
-                print(i + "번 디액티브");
                 costmark[i].GetComponent<Costmark>().DeactiveCost();
             }
         }
@@ -103,11 +106,30 @@ public class UiManager : MonoBehaviour
         }
 
     }
+    public void MonsAttackPannelSet(bool set, string name)
+    {
+        if (set)
+        {
+                monsattackpannel.SetActive(true);
+                monsattackpannel.GetComponentInChildren<TMP_Text>().text = name;
+        }
+        else
+        {
+            monsattackpannel.SetActive(false);
+            monsattackpannel.GetComponentInChildren<TMP_Text>().text = "";
+
+        }
+
+    }
 
 
     public void SetGameover()
     {
         gameoverPannel.SetActive(true);
+    }
 
+    public void SetGameClear()
+    {
+        gameclearPannel.SetActive(true);
     }
 }

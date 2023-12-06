@@ -14,7 +14,7 @@ public class PlayerManager : MonoBehaviour
     public PlayerMove pm;
     public Player player;
 
-    public bool gameover=false;
+    public bool gameover = false;
     private void Awake()
     {
         if (instance == null)
@@ -32,10 +32,21 @@ public class PlayerManager : MonoBehaviour
         gameover = true;
         UiManager.Instance.SetGameover();
         ActionBasedController[] cont = playerOb.GetComponentsInChildren<ActionBasedController>();
-        foreach (ActionBasedController controller in cont) 
+        foreach (ActionBasedController controller in cont)
         {
-          controller.enabled = false;
+            controller.enabled = false;
         }
+    }
+
+    public void GameClear()
+    {
+        UiManager.Instance.SetGameClear();
+        ActionBasedController[] cont = playerOb.GetComponentsInChildren<ActionBasedController>();
+        foreach (ActionBasedController controller in cont)
+        {
+            controller.enabled = false;
+        }
+
     }
 
     // Start is called before the first frame update

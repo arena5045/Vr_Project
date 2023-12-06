@@ -23,6 +23,9 @@ public class BattleManager : MonoBehaviour
     public GameObject monsterOb;
     public Monster monster;
 
+    public List<CardData> Deck = new List<CardData>();
+
+
     public List<int[]> BuffList = new List<int[]>();
     public int[] buff = new int[2];
     public int CurCost
@@ -81,29 +84,50 @@ public class BattleManager : MonoBehaviour
         }
         CurCost = turnCost;
 
-        if (BuffList.Count >= 0)
+        if (BuffList.Count > 0)
         {
-            List<int> deadbuff = new List<int>();
+            List<int[]> deadbuff = new List<int[]>();
             for(int i =0; i< BuffList.Count; i++)
             {
                 BuffList[i][0]--;
 
                 if (BuffList[i][0] <= 0)
                 {
-                    deadbuff.Add(i);
+                    deadbuff.Add(BuffList[i]);
+                    print(i+"번째 버프 삭제예정");
                 }
             }
 
-            foreach(int i in deadbuff)
-                {
-                  BuffList.RemoveAt(i);
+            if (deadbuff.Count > 0)
+            {
+                for(int i = 0; i < deadbuff.Count; i++)
+                { 
+                    BuffList.Remove(deadbuff[i]);
                 }
+            }
+  
         }
 
         foreach (GameObject card in CardList)
         {
             card.GetComponent<Card>().SettingUi();
         }
+
+
+        for (int i = 0; i < CardList.Count; i++)
+        {
+            Card card = CardList[i].GetComponent<Card>();
+
+            if (!card.cardbtn.isSelected && card.cost > curCost)
+            {
+                card.SetAble(false);
+            }
+            else
+            {
+                card.SetAble(true);
+            }
+        }
+
     }
 
     public void AddCard(Card card)
@@ -263,7 +287,10 @@ public class BattleManager : MonoBehaviour
 
             }
             float casttime = Actionlist[0].card.data.casttime;
-            Actionlist[0].card.gameObject.SetActive(false);
+
+            Actionlist[0].card.data = null; //카드 데이터 삭쪠!
+            Actionlist[0].card.gameObject.SetActive(false); //
+
             Actionlist.RemoveAt(0);
 
             yield return new WaitForSeconds(casttime);
@@ -281,11 +308,21 @@ public class BattleManager : MonoBehaviour
         {
             if (monster.parts[i].Active)
             {
+                monster.AttackAnim(i + 1);
+                UiManager.Instance.MonsAttackPannelSet(true, monster.parts[i].NomalAttackName);
+                yield return new WaitForSeconds(0.5f);
                 PlayerManager.Instance.player.Damaged(monster.parts[i].NomalAttackDamage);
             }
-
-
-            yield return new WaitForSeconds(1f);
+            else
+            {
+                break;
+            }
+            yield return new WaitForSeconds(1.5f);
+            UiManager.Instance.MonsAttackPannelSet(false,"");
+            if (monster.isDead)
+            {
+                yield break;
+            }
         }
         TurnStart();
         UiManager.Instance.MainPannel.GetComponent<TrackedDeviceGraphicRaycaster>().enabled = true;
